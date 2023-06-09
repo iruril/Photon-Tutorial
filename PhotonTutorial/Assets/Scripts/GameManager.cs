@@ -42,6 +42,17 @@ namespace Com.MyCompany.MyGame
         }
         #endregion
 
+        #region Public Fields
+        public static GameManager Instance; //ΩÃ±€≈Ê
+        #endregion
+
+        #region Monobehaviour Callbacks
+        private void Start()
+        {
+            Instance = this;
+        }
+        #endregion
+
         #region Private Methods
         void LoadArena()
         {
