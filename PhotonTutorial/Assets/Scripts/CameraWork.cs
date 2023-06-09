@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Photon.Pun.Demo.PunBasics
+namespace Com.MyCompany.MyGame
 {
     public class CameraWork : MonoBehaviour
     {
