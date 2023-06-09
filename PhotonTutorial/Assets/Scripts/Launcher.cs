@@ -18,6 +18,7 @@ namespace Com.MyCompany.MyGame
         ///이 클라이언트의 게임 버젼을 나타낸다. 각 유저들은 gameVersion에 따라 분할된다.
         /// </summary>
         string gameVersion = "1";
+        bool isConnecting; //현재 프로세스를 추적한다.
         #endregion
 
         #region Public Fields
@@ -37,7 +38,10 @@ namespace Com.MyCompany.MyGame
             // 중요!! 우린 일단 존재하는 방에 접속을 시도한다.
             // 성공하면, 좋다.
             // 실패하면, OnJoinRandomFailed()로 다시 호출된다.
-            PhotonNetwork.JoinRandomRoom();
+            if (isConnecting) //방에 들어가길 원치 않을때는 아무것도 안해야 한다.
+            {
+                PhotonNetwork.JoinRandomRoom();
+            }
         }
         public override void OnDisconnected(DisconnectCause cause)
         {
@@ -59,6 +63,15 @@ namespace Com.MyCompany.MyGame
         public override void OnJoinedRoom()
         {
             Debug.Log("Photon Tutorial : OnJoinedRoom()이 PUN에 의해 호출되었습니다. 이제 이 클라이언트는 방에 접속해있습니다.");
+            ///첫 번째 플레이어인 경우에만 로드하고 그렇지 않은 경우에는
+            ///Photon Network.AutomaticallySyncScene을 사용하여 인스턴스 장면을 동기화한다.
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            {
+                Debug.Log("Room for 1을 로드합니다.");
+
+                //방 레벨을 로드한다.
+                PhotonNetwork.LoadLevel("Room for 1");
+            }
         }
 
         /// <summary>
@@ -92,6 +105,7 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         public void Connect()
         {
+            isConnecting = true; //연결하고 있는지 여부를 계속해서 체크한다.
             progressLabel.SetActive(true);
             controlPanel.SetActive(false);
             if (PhotonNetwork.IsConnected)
